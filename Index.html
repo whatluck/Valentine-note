@@ -1,0 +1,152 @@
+<!-- Drop-in replacement text for your existing page.
+     If you already deployed the previous index.html, just replace it with this full file. -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Valentine’s Day 💌</title>
+  <meta name="description" content="A simple Valentine’s Day message page." />
+  <style>
+    :root{
+      --bg1:#0b1020; --bg2:#1b0f2a;
+      --card:rgba(17,24,42,.88);
+      --text:#f4f6ff; --muted:#c7c9e4;
+      --pink:#ff4fa3; --pink2:#ff7bc1; --border:rgba(255,255,255,.14);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 700px at 18% 12%, rgba(255,79,163,.25), transparent 55%),
+        radial-gradient(900px 600px at 88% 28%, rgba(122,167,255,.14), transparent 55%),
+        linear-gradient(120deg, var(--bg1), var(--bg2));
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+      overflow-x:hidden;
+    }
+    .wrap{width:min(920px, 100%)}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      padding:28px 22px;
+      backdrop-filter: blur(10px);
+    }
+    h1{margin:0; font-size:clamp(26px, 4.2vw, 40px); letter-spacing:-.02em}
+    .sub{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.65;
+      max-width:70ch;
+      font-size:clamp(14px, 2vw, 16px);
+    }
+    .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; align-items:center;}
+    button{
+      border:0; cursor:pointer; font-weight:800;
+      padding:12px 14px; border-radius:14px;
+      transition:transform .08s ease, filter .15s ease;
+      display:inline-flex; align-items:center; gap:10px;
+    }
+    button:active{transform:translateY(1px)}
+    .primary{background:linear-gradient(135deg, var(--pink), var(--pink2)); color:#190014}
+    .ghost{background:rgba(255,255,255,.08); color:var(--text); border:1px solid var(--border)}
+    .note{
+      margin-top:16px; padding:14px; border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+      display:none;
+    }
+    .note.show{display:block}
+    .note h2{margin:0 0 6px; font-size:18px}
+    .note p{margin:0; color:var(--muted); line-height:1.65}
+    .footer{margin-top:18px; color:rgba(255,255,255,.55); font-size:12px; line-height:1.5;}
+    .confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden}
+    .confetti i{
+      position:absolute; width:10px; height:16px; opacity:.92;
+      transform:translateY(-20px) rotate(0deg);
+      animation:fall linear forwards;
+      border-radius:3px;
+    }
+    @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:1; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1 id="title">Happy Valentine’s Day, Taniesha 💌</h1>
+
+      <p class="sub" id="subtitle">
+        Quick Valentine’s message: I miss you 😅❤️
+      </p>
+
+      <div class="row">
+        <button class="primary" id="openBtn">Tap for the real note 💖</button>
+        <button class="ghost" id="copyBtn">Copy link</button>
+      </div>
+
+      <div class="note" id="note">
+        <h2 id="noteTitle">Ok fr…</h2>
+        <p id="noteText">
+          I still got love for you. No pressure — just wanted to make you smile today.
+          If you’re down to talk (or grab something small), I’m here.
+        </p>
+      </div>
+
+      <div class="footer">
+        If she’s not feeling it, let it be graceful. If she is… you just cooked. 🤝
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  function popConfetti(){
+    const layer = $("confetti");
+    layer.innerHTML = "";
+    const colors = ["#ff4fa3","#ff7bc1","#45d483","#7aa7ff","#ffd166","#b388ff"];
+    const count = 110;
+    for(let i=0;i<count;i++){
+      const piece = document.createElement("i");
+      const left = Math.random() * 100;
+      const delay = Math.random() * 0.15;
+      const dur = 1.8 + Math.random() * 1.4;
+      const size = 8 + Math.random() * 8;
+      piece.style.left = left + "vw";
+      piece.style.top = (-20 - Math.random()*40) + "px";
+      piece.style.width = (size * 0.7) + "px";
+      piece.style.height = size + "px";
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration = dur + "s";
+      piece.style.animationDelay = delay + "s";
+      layer.appendChild(piece);
+    }
+    setTimeout(()=> layer.innerHTML = "", 3800);
+  }
+
+  $("openBtn").addEventListener("click", () => {
+    $("note").classList.add("show");
+    popConfetti();
+    $("note").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  $("copyBtn").addEventListener("click", async () => {
+    const full = (location.origin + location.pathname + location.search);
+    try{
+      await navigator.clipboard.writeText(full);
+      $("copyBtn").textContent = "Copied ✅";
+      setTimeout(()=> $("copyBtn").textContent = "Copy link", 1600);
+    }catch(e){
+      alert("Copy failed. Long-press the address bar and copy the link.");
+    }
+  });
+</script>
+</body>
+</html>
